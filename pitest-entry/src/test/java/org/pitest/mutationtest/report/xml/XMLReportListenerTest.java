@@ -53,7 +53,7 @@ public class XMLReportListenerTest {
     final MutationResult mr = createdKilledMutationWithKillingTestOf("foo");
     this.testee
         .handleMutationResult(MutationTestResultMother.createClassResults(mr));
-    final String expected = "<mutation detected='true' status='KILLED' numberOfTestsRun='1'><sourceFile>file</sourceFile><mutatedClass>clazz</mutatedClass><mutatedMethod>method</mutatedMethod><methodDescription>()I</methodDescription><lineNumber>42</lineNumber><mutator>mutator</mutator><index>1</index><block>0</block><killingTest>foo</killingTest><description>desc</description></mutation>\n";
+    final String expected = "<mutation detected='true' status='KILLED' numberOfTestsRun='1'><sourceFile>file</sourceFile><mutatedClass>clazz</mutatedClass><mutatedMethod>method</mutatedMethod><methodDescription>()I</methodDescription><lineNumber>42</lineNumber><mutator>mutator</mutator><index>1</index><block>0</block><killingTest>foo</killingTest><succeedingTest/><description>desc</description></mutation>\n";
     assertEquals(expected, this.out.toString());
   }
 
@@ -86,7 +86,7 @@ public class XMLReportListenerTest {
     final MutationResult mr = createSurvivingMutant();
     this.testee
         .handleMutationResult(MutationTestResultMother.createClassResults(mr));
-    final String expected = "<mutation detected='false' status='SURVIVED' numberOfTestsRun='1'><sourceFile>file</sourceFile><mutatedClass>clazz</mutatedClass><mutatedMethod>method</mutatedMethod><methodDescription>()I</methodDescription><lineNumber>42</lineNumber><mutator>mutator</mutator><index>1</index><block>0</block><killingTest/><description>desc</description></mutation>\n";
+    final String expected = "<mutation detected='false' status='SURVIVED' numberOfTestsRun='1'><sourceFile>file</sourceFile><mutatedClass>clazz</mutatedClass><mutatedMethod>method</mutatedMethod><methodDescription>()I</methodDescription><lineNumber>42</lineNumber><mutator>mutator</mutator><index>1</index><block>0</block><killingTest/><succeedingTest/><description>desc</description></mutation>\n";
     assertEquals(expected, this.out.toString());
   }
 

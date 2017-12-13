@@ -25,6 +25,7 @@ import static org.pitest.mutationtest.report.xml.Tag.mutatedMethod;
 import static org.pitest.mutationtest.report.xml.Tag.mutation;
 import static org.pitest.mutationtest.report.xml.Tag.mutator;
 import static org.pitest.mutationtest.report.xml.Tag.sourceFile;
+import static org.pitest.mutationtest.report.xml.Tag.succeedingTest;
 
 import java.io.IOException;
 import java.io.Writer;
@@ -39,7 +40,7 @@ import org.pitest.util.StringUtil;
 import org.pitest.util.Unchecked;
 
 enum Tag {
-  mutation, sourceFile, mutatedClass, mutatedMethod, methodDescription, lineNumber, mutator, index, killingTest, description, block;
+  mutation, sourceFile, mutatedClass, mutatedMethod, methodDescription, lineNumber, mutator, index, killingTest, succeedingTest, description, block;
 }
 
 public class XMLReportListener implements MutationResultListener {
@@ -82,8 +83,10 @@ public class XMLReportListener implements MutationResultListener {
         + makeNode(clean(details.getMutator()), mutator)
         + makeNode("" + details.getFirstIndex(), index)
         + makeNode("" + details.getBlock(), block)
-        + makeNode(createKillingTestDesc(mutation.getKillingTest()),
+        + makeNode(createTestDesc(mutation.getKillingTest()),
             killingTest)
+        + makeNode(createTestDesc(mutation.getSucceedingTest()),
+            succeedingTest)
         + makeNode(clean(details.getDescription()), description);
   }
 
@@ -109,9 +112,9 @@ public class XMLReportListener implements MutationResultListener {
     }
   }
 
-  private String createKillingTestDesc(final Optional<String> killingTest) {
-    if (killingTest.isPresent()) {
-      return clean(killingTest.get());
+  private String createTestDesc(final Optional<String> test) {
+    if (test.isPresent()) {
+      return clean(test.get());
     } else {
       return null;
     }
