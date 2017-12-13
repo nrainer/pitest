@@ -25,16 +25,24 @@ public final class MutationStatusTestPair implements Serializable {
   private final int             numberOfTestsRun;
   private final DetectionStatus status;
   private final String  killingTest;
+  /** may be null*/
+  private final String  succeedingTest;
 
   public MutationStatusTestPair(final int numberOfTestsRun,
       final DetectionStatus status) {
-    this(numberOfTestsRun, status, null);
+    this(numberOfTestsRun, status, null, null);
   }
 
   public MutationStatusTestPair(final int numberOfTestsRun,
       final DetectionStatus status, final String killingTest) {
+    this(numberOfTestsRun, status, killingTest, null);
+  }
+
+  public MutationStatusTestPair(final int numberOfTestsRun,
+      final DetectionStatus status, final String killingTest, final String succeedingTest) {
     this.status = status;
     this.killingTest = killingTest;
+    this.succeedingTest = succeedingTest;
     this.numberOfTestsRun = numberOfTestsRun;
   }
 
@@ -44,6 +52,10 @@ public final class MutationStatusTestPair implements Serializable {
 
   public Optional<String> getKillingTest() {
     return Optional.ofNullable(this.killingTest);
+  }
+
+  public Optional<String> getSucceedingTest() {
+    return Optional.ofNullable(this.succeedingTest);
   }
 
   public int getNumberOfTestsRun() {

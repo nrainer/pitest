@@ -15,6 +15,9 @@
 package org.pitest.mutationtest.execute;
 
 import java.util.Optional;
+import java.util.ArrayList;
+import java.util.List;
+
 import org.pitest.mutationtest.DetectionStatus;
 import org.pitest.testapi.Description;
 import org.pitest.testapi.TestListener;
@@ -22,12 +25,16 @@ import org.pitest.testapi.TestResult;
 
 public class CheckTestHasFailedResultListener implements TestListener {
 
+  private static final String TESTCASE_SEPARATOR = "|";
   private Optional<Description> lastFailingTest = Optional.empty();
+  private List<Description> succeedingTests = new ArrayList<Description>();
+  private List<Description> failingTests = new ArrayList<Description>();
   private int                 testsRun        = 0;
 
   @Override
   public void onTestFailure(final TestResult tr) {
     this.lastFailingTest = Optional.ofNullable(tr.getDescription());
+    this.failingTests.add(tr.getDescription());
   }
 
   @Override
@@ -42,6 +49,7 @@ public class CheckTestHasFailedResultListener implements TestListener {
 
   @Override
   public void onTestSuccess(final TestResult tr) {
+    this.succeedingTests.add(tr.getDescription());
 
   }
 
@@ -52,6 +60,35 @@ public class CheckTestHasFailedResultListener implements TestListener {
       return DetectionStatus.SURVIVED;
     }
   }
+  
+  public List<Description> succeedingTests() {
+    return succeedingTests;
+  }
+
+  public List<Description> failingTests() {
+    return this.failingTests;
+  }
+
+  public String succeedingTestsString() {
+    return toTestsString(this.succeedingTests());
+  }
+
+  public String failingTestsString() {
+    return toTestsString(this.failingTests());
+  }
+
+  private String toTestsString(List<Description> descriptions) {
+    if (descriptions.isEmpty()) {
+      return null;
+    }
+
+    StringBuilder builder = new StringBuilder();
+    for (Description d : descriptions) {
+      builder.append(d.getQualifiedName());
+      builder.append(TESTCASE_SEPARATOR);
+    }
+    return builder.substring(0, builder.length() - TESTCASE_SEPARATOR.length());
+  } 
 
   public Optional<Description> lastFailingTest() {
     return this.lastFailingTest;
