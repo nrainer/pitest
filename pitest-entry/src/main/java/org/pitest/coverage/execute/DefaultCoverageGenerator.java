@@ -105,8 +105,10 @@ public class DefaultCoverageGenerator implements CoverageGenerator {
   }
 
   private static void verifyBuildSuitableForMutationTesting(final CoverageData coverage) {
-    if (!coverage.allTestsGreen()) {
+    if (coverage.getCountFailedTests() > 5) {
       throw new PitHelpError(Help.FAILING_TESTS, coverage.getCountFailedTests());
+    } else if (coverage.getCountFailedTests() > 0) {
+        LOG.warning("Ignored " + coverage.getCountFailedTests() + " failing tests! Continuing!");
     }
   }
 
