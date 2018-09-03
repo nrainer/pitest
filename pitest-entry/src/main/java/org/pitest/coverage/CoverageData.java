@@ -115,10 +115,13 @@ public class CoverageData implements CoverageDatabase {
   public void calculateClassCoverage(final CoverageResult cr) {
 
     checkForFailedTest(cr);
-    final TestInfo ti = this.createTestInfo(cr.getTestUnitDescription(),
-        cr.getExecutionTime(), cr.getNumberOfCoveredBlocks());
-    for (final BlockLocation each : cr.getCoverage()) {
-      addTestsToBlockMap(ti, each);
+    
+    if (cr.isGreenTest()) {
+        final TestInfo ti = this.createTestInfo(cr.getTestUnitDescription(),
+            cr.getExecutionTime(), cr.getNumberOfCoveredBlocks());
+        for (final BlockLocation each : cr.getCoverage()) {
+          addTestsToBlockMap(ti, each);
+        }
     }
   }
 
