@@ -48,7 +48,9 @@ import org.pitest.util.Unchecked;
 
 public class DefaultCoverageGenerator implements CoverageGenerator {
 
-  private static final Logger    LOG = Log.getLogger();
+  private static final int ALLOWED_NUMBER_OF_FAILING_TESTS = 15;
+
+private static final Logger    LOG = Log.getLogger();
 
   private final CoverageOptions  coverageOptions;
   private final LaunchOptions    launchOptions;
@@ -105,10 +107,11 @@ public class DefaultCoverageGenerator implements CoverageGenerator {
   }
 
   private static void verifyBuildSuitableForMutationTesting(final CoverageData coverage) {
-    if (coverage.getCountFailedTests() > 5) {
+    if (coverage.getCountFailedTests() > ALLOWED_NUMBER_OF_FAILING_TESTS) {
+      LOG.severe("More tests (" + coverage.getCountFailedTests() + ") failed than allowed (" + ALLOWED_NUMBER_OF_FAILING_TESTS + ")!");
       throw new PitHelpError(Help.FAILING_TESTS, coverage.getCountFailedTests());
     } else if (coverage.getCountFailedTests() > 0) {
-        LOG.warning("Ignored " + coverage.getCountFailedTests() + " failing tests! Continuing!");
+        LOG.warning("Ignored " + coverage.getCountFailedTests() + " failing tests (max allowed: " + ALLOWED_NUMBER_OF_FAILING_TESTS + ")! Continuing!");
     }
   }
 
