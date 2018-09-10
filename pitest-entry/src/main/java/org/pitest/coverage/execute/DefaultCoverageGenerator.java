@@ -48,8 +48,6 @@ import org.pitest.util.Unchecked;
 
 public class DefaultCoverageGenerator implements CoverageGenerator {
 
-  private static final int ALLOWED_NUMBER_OF_FAILING_TESTS = 15;
-
 private static final Logger    LOG = Log.getLogger();
 
   private final CoverageOptions  coverageOptions;
@@ -93,7 +91,7 @@ private static final Logger    LOG = Log.getLogger();
 
       LOG.info("Calculated coverage in " + time + " seconds.");
 
-      verifyBuildSuitableForMutationTesting(coverage);
+      verifyBuildSuitableForMutationTesting(coverage, coverageOptions.getAllowedFailingTests());
 
       this.exporter.recordCoverage(coverage.createCoverage());
 
@@ -106,12 +104,12 @@ private static final Logger    LOG = Log.getLogger();
     }
   }
 
-  private static void verifyBuildSuitableForMutationTesting(final CoverageData coverage) {
-    if (coverage.getCountFailedTests() > ALLOWED_NUMBER_OF_FAILING_TESTS) {
-      LOG.severe("More tests (" + coverage.getCountFailedTests() + ") failed than allowed (" + ALLOWED_NUMBER_OF_FAILING_TESTS + ")!");
+  private static void verifyBuildSuitableForMutationTesting(final CoverageData coverage, int allowedFailingTests) {
+    if (coverage.getCountFailedTests() > allowedFailingTests) {
+      LOG.severe("More tests (" + coverage.getCountFailedTests() + ") failed than allowed (" + allowedFailingTests + ")!");
       throw new PitHelpError(Help.FAILING_TESTS, coverage.getCountFailedTests());
     } else if (coverage.getCountFailedTests() > 0) {
-        LOG.warning("Ignored " + coverage.getCountFailedTests() + " failing tests (max allowed: " + ALLOWED_NUMBER_OF_FAILING_TESTS + ")! Continuing!");
+        LOG.warning("Ignored " + coverage.getCountFailedTests() + " failing tests (max allowed: " + allowedFailingTests + ")! Continuing!");
     }
   }
 

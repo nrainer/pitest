@@ -113,7 +113,7 @@ public class SettingsFactory {
     return new CoverageOptions(
         this.options.getTargetClasses(), this.options.getExcludedClasses(),
         this.options.createMinionSettings(), this.options.isVerbose(),
-        this.options.getDependencyAnalysisMaxDistance());
+        this.options.getDependencyAnalysisMaxDistance(), this.options.getAllowedFailingTests());
   }
 
   public CompoundInterceptorFactory getInterceptor() {

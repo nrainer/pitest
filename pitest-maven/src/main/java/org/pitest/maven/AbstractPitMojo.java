@@ -666,4 +666,13 @@ public class AbstractPitMojo extends AbstractMojo {
     }
   }
 
+  /**
+   * TestNG Groups/JUnit Categories to exclude
+   */
+  @Parameter(property = "allowedFailingTests")
+  private int           allowedFailingTests = 0;
+  
+  public int getAllowedFailingTests() {
+    return allowedFailingTests;
+}
 }

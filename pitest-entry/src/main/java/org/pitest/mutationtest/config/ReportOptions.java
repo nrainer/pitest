@@ -628,7 +628,14 @@ public class ReportOptions {
         + "]";
   }
 
+  private int allowedFailingTests;
   
-
+  public void setAllowedFailingTests(int value) {
+    this.allowedFailingTests = value;
+  }
+  
+  public int getAllowedFailingTests() {
+    return allowedFailingTests;
+  }
 
 }

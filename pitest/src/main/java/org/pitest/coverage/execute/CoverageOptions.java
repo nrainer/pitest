@@ -34,16 +34,23 @@ public class CoverageOptions implements Serializable {
   private final boolean           verbose;
   private final TestPluginArguments pitConfig;
   private final int               maxDependencyDistance;
+  private final int allowedFailingTests;
 
   public CoverageOptions(final Collection<String> include, final Collection<String> exclude,
       final TestPluginArguments pitConfig, final boolean verbose,
       final int maxDependencyDistance) {
+      this(include, exclude, pitConfig, verbose, maxDependencyDistance, 0);
+  }
+  public CoverageOptions(final Collection<String> include, final Collection<String> exclude,
+      final TestPluginArguments pitConfig, final boolean verbose,
+      final int maxDependencyDistance, int allowedFailingTests) {
     Preconditions.checkNotNull(pitConfig);
     this.include = include;
     this.exclude = exclude;
     this.verbose = verbose;
     this.pitConfig = pitConfig;
     this.maxDependencyDistance = maxDependencyDistance;
+    this.allowedFailingTests = allowedFailingTests;
   }
 
   public Predicate<String> getFilter() {
@@ -77,4 +84,7 @@ public class CoverageOptions implements Serializable {
     return new Glob(match);
   }
 
+  public int getAllowedFailingTests() {
+    return allowedFailingTests;
+  }
 }

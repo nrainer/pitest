@@ -146,6 +146,8 @@ public class MojoToReportOptionsConverter {
     data.setFreeFormProperties(createPluginProperties());
     data.setIncludedTestMethods(this.mojo.getIncludedTestMethods());
 
+    data.setAllowedFailingTests(this.mojo.getAllowedFailingTests());
+    
     return data;
   }
 
