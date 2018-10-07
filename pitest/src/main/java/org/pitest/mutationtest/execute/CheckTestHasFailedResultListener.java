@@ -24,7 +24,8 @@ import org.pitest.testapi.TestResult;
 public class CheckTestHasFailedResultListener implements TestListener {
 
   private final List<Description>   succeedingTests = new ArrayList<>();
-  private final List<Description>   failingTests = new ArrayList<>();
+  private final List<Description>   assertionFailingTests = new ArrayList<>();
+  private final List<Description>   exceptionFailingTests = new ArrayList<>();
   private final boolean       recordPassingTests;
   private int                 testsRun        = 0;
 
@@ -34,7 +35,12 @@ public class CheckTestHasFailedResultListener implements TestListener {
 
   @Override
   public void onTestFailure(final TestResult tr) {
-    this.failingTests.add(tr.getDescription());
+    if (tr.getThrowable() instanceof AssertionError) {
+      this.assertionFailingTests.add(tr.getDescription());
+    }
+    else {
+      this.exceptionFailingTests.add(tr.getDescription());
+    }
   }
 
   @Override
@@ -55,7 +61,7 @@ public class CheckTestHasFailedResultListener implements TestListener {
   }
 
   public DetectionStatus status() {
-    if (!this.failingTests.isEmpty()) {
+    if (!this.assertionFailingTests.isEmpty() || !this.exceptionFailingTests.isEmpty()) {
       return DetectionStatus.KILLED;
     } else {
       return DetectionStatus.SURVIVED;
@@ -66,9 +72,13 @@ public class CheckTestHasFailedResultListener implements TestListener {
     return succeedingTests;
 }
 
-  public List<Description> getFailingTests() {
-    return failingTests;
+  public List<Description> getAssertionFailingTests() {
+    return assertionFailingTests;
 }
+
+  public List<Description> getExceptionFailingTests() {
+    return exceptionFailingTests;
+  }
 
   public int getNumberOfTestsRun() {
     return this.testsRun;

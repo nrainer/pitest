@@ -33,12 +33,24 @@ public final class MutationResult {
     return this.details;
   }
 
-  public Optional<String> getKillingTest() {
-    return this.status.getKillingTest();
+  public Optional<String> getAssertionKillingTest() {
+    return this.status.getAssertionKillingTest();
   }
 
-  public List<String> getKillingTests() {
-    return this.status.getKillingTests();
+  public List<String> getAssertionKillingTests() {
+    return this.status.getAssertionKillingTests();
+  }
+  
+  public Optional<String> getAnyKillingTest() {
+    return this.status.getAnyKillingTest();
+  }
+
+  public Optional<String> getExceptionKillingTest() {
+    return this.status.getExceptionKillingTest();
+  }
+  
+  public List<String> getExceptionKillingTests() {
+    return this.status.getExceptionKillingTests();
   }
 
   public List<String> getSucceedingTests() {
@@ -62,7 +74,7 @@ public final class MutationResult {
   }
 
   public String getKillingTestDescription() {
-    return getKillingTest().orElse("none");
+    return getAnyKillingTest().orElse("none");
   }
 
   @Override

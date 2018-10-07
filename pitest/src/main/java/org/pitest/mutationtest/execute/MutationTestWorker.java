@@ -200,13 +200,15 @@ public class MutationTestWorker {
 
   private MutationStatusTestPair createStatusTestPair(
       final CheckTestHasFailedResultListener listener) {
-    List<String> failingTests = listener.getFailingTests().stream()
+    List<String> assertionFailingTests = listener.getAssertionFailingTests().stream()
+        .map(description -> description.getQualifiedName()).collect(Collectors.toList());
+    List<String> exceptionFailingTests = listener.getExceptionFailingTests().stream()
         .map(description -> description.getQualifiedName()).collect(Collectors.toList());
     List<String> succeedingTests = listener.getSucceedingTests().stream()
         .map(description -> description.getQualifiedName()).collect(Collectors.toList());
 
     return new MutationStatusTestPair(listener.getNumberOfTestsRun(),
-        listener.status(), failingTests, succeedingTests);
+        listener.status(), assertionFailingTests, exceptionFailingTests, succeedingTests);
   }
 
   private List<TestUnit> createEarlyExitTestGroup(final List<TestUnit> tests) {

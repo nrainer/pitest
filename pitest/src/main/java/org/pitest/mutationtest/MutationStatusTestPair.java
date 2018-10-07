@@ -28,7 +28,8 @@ public final class MutationStatusTestPair implements Serializable {
 
   private final int             numberOfTestsRun;
   private final DetectionStatus status;
-  private final List<String>    killingTests;
+  private final List<String>    assertionKillingTests;
+  private final List<String>    exceptionKillingTests;
   private final List<String>    succeedingTests;
 
   public MutationStatusTestPair(final int numberOfTestsRun,
@@ -39,14 +40,16 @@ public final class MutationStatusTestPair implements Serializable {
   public MutationStatusTestPair(final int numberOfTestsRun,
       final DetectionStatus status, final String killingTest) {
     this(numberOfTestsRun, status, killingTestToList(killingTest),
-      Collections.emptyList());
+      Collections.emptyList(), Collections.emptyList());
   }
 
   public MutationStatusTestPair(final int numberOfTestsRun,
-      final DetectionStatus status, final List<String> killingTests,
+      final DetectionStatus status, final List<String> assertionKillingTests,
+      final List<String> exceptionKillingTests,
       final List<String> succeedingTests) {
     this.status = status;
-    this.killingTests = killingTests;
+    this.assertionKillingTests = assertionKillingTests;
+    this.exceptionKillingTests = exceptionKillingTests;
     this.succeedingTests = succeedingTests;
     this.numberOfTestsRun = numberOfTestsRun;
   }
@@ -67,18 +70,43 @@ public final class MutationStatusTestPair implements Serializable {
    * Get the killing test.
    * If the full mutation matrix is enabled, the first test will be returned.
    */
-  public Optional<String> getKillingTest() {
-    if (this.killingTests.isEmpty()) {
+  public Optional<String> getAssertionKillingTest() {
+    if (this.assertionKillingTests.isEmpty()) {
       return Optional.empty();
     }
-    return Optional.of(this.killingTests.get(0));
+    return Optional.of(this.assertionKillingTests.get(0));
   }
 
   /** Get all killing tests.
    *  If the full mutation matrix is not enabled, this will only be the first killing test. 
    */
-  public List<String> getKillingTests() {
-    return killingTests;
+  public List<String> getAssertionKillingTests() {
+    return assertionKillingTests;
+  }
+
+  /**
+   * Get the killing test.
+   * If the full mutation matrix is enabled, the first test will be returned.
+   */
+  public Optional<String> getExceptionKillingTest() {
+    if (this.exceptionKillingTests.isEmpty()) {
+      return Optional.empty();
+    }
+    return Optional.of(this.exceptionKillingTests.get(0));
+  }
+
+  public Optional<String> getAnyKillingTest() {
+    if (getAssertionKillingTest().isPresent()) {
+      return getAssertionKillingTest();
+    }
+    return getExceptionKillingTest();
+  }
+  
+  /** Get all killing tests.
+   *  If the full mutation matrix is not enabled, this will only be the first killing test. 
+   */
+  public List<String> getExceptionKillingTests() {
+    return exceptionKillingTests;
   }
 
   /** Get all succeeding tests.
@@ -94,10 +122,10 @@ public final class MutationStatusTestPair implements Serializable {
 
   @Override
   public String toString() {
-    if (this.killingTests.isEmpty()) {
+    if (this.assertionKillingTests.isEmpty() && this.exceptionKillingTests.isEmpty()) {
       return this.status.name();
     } else {
-      return this.status.name() + " by " + this.killingTests;
+      return this.status.name() + " by " + this.assertionKillingTests + " and " + this.exceptionKillingTests;
     }
 
   }
@@ -107,7 +135,9 @@ public final class MutationStatusTestPair implements Serializable {
     final int prime = 31;
     int result = 1;
     result = (prime * result)
-        + ((this.killingTests == null) ? 0 : this.killingTests.hashCode());
+        + ((this.assertionKillingTests == null) ? 0 : this.assertionKillingTests.hashCode());
+    result = (prime * result)
+        + ((this.exceptionKillingTests == null) ? 0 : this.exceptionKillingTests.hashCode());
     result = (prime * result)
         + ((this.succeedingTests == null) ? 0 : this.succeedingTests.hashCode());
     result = (prime * result) + this.numberOfTestsRun;
@@ -128,8 +158,11 @@ public final class MutationStatusTestPair implements Serializable {
       return false;
     }
     final MutationStatusTestPair other = (MutationStatusTestPair) obj;
-    if (!Objects.equals( this.killingTests,other.killingTests)) {
+    if (!Objects.equals( this.assertionKillingTests,other.assertionKillingTests)) {
       return false;
+    }
+    if (!Objects.equals( this.exceptionKillingTests,other.exceptionKillingTests)) {
+    	return false;
     }
     if (!Objects.equals(this.succeedingTests, other.succeedingTests)) {
       return false;

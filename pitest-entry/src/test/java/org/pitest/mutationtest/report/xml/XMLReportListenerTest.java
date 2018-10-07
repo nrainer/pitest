@@ -63,10 +63,10 @@ public class XMLReportListenerTest {
     this.testee = new XMLReportListener(this.out, true);
     final MutationResult mr = new MutationResult(
             MutationTestResultMother.createDetails(),
-            new MutationStatusTestPair(3, DetectionStatus.KILLED, Arrays.asList("foo", "foo2"), Arrays.asList("bar")));
+            new MutationStatusTestPair(3, DetectionStatus.KILLED, Arrays.asList("foo", "foo2"), Arrays.asList(), Arrays.asList("bar")));
     this.testee
         .handleMutationResult(MutationTestResultMother.createClassResults(mr));
-    final String expected = "<mutation detected='true' status='KILLED' numberOfTestsRun='3'><sourceFile>file</sourceFile><mutatedClass>clazz</mutatedClass><mutatedMethod>method</mutatedMethod><methodDescription>()I</methodDescription><lineNumber>42</lineNumber><mutator>mutator</mutator><index>1</index><block>0</block><killingTests>foo|foo2</killingTests><succeedingTests>bar</succeedingTests><description>desc</description></mutation>\n";
+    final String expected = "<mutation detected='true' status='KILLED' numberOfTestsRun='3'><sourceFile>file</sourceFile><mutatedClass>clazz</mutatedClass><mutatedMethod>method</mutatedMethod><methodDescription>()I</methodDescription><lineNumber>42</lineNumber><mutator>mutator</mutator><index>1</index><block>0</block><assertionKillingTests>foo|foo2</assertionKillingTests><exceptionKillingTests></exceptionKillingTests><succeedingTests>bar</succeedingTests><description>desc</description></mutation>\n";
     assertEquals(expected, this.out.toString());
   }
 

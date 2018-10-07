@@ -53,7 +53,7 @@ public class CheckTestHasFailedResultListenerTest {
   public void shouldRecordDescriptionOfLastFailingTest() {
     this.testee = new CheckTestHasFailedResultListener(false);
     this.testee.onTestFailure(new TestResult(this.description, null));
-    assertEquals(this.description, this.testee.getFailingTests().get(0));
+    assertEquals(this.description, this.testee.getAssertionFailingTests().get(0));
   }
 
   @Test
