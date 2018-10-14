@@ -24,24 +24,27 @@ public final class MutationStatusTestPair implements Serializable {
 
   private final int             numberOfTestsRun;
   private final DetectionStatus status;
-  private final String  killingTest;
+  private final String  assertionKillingTests;
+  private final String  exceptionKillingTests;
   /** may be null*/
   private final String  succeedingTest;
 
   public MutationStatusTestPair(final int numberOfTestsRun,
       final DetectionStatus status) {
-    this(numberOfTestsRun, status, null, null);
+    this(numberOfTestsRun, status, null, null, null);
   }
 
   public MutationStatusTestPair(final int numberOfTestsRun,
-      final DetectionStatus status, final String killingTest) {
-    this(numberOfTestsRun, status, killingTest, null);
+      final DetectionStatus status, final String assertionKillingTests) {
+    // constructor is not relevant for the mutation matrix
+    this(numberOfTestsRun, status, assertionKillingTests, null, null);
   }
 
   public MutationStatusTestPair(final int numberOfTestsRun,
-      final DetectionStatus status, final String killingTest, final String succeedingTest) {
+      final DetectionStatus status, final String assertionKillingTests, final String exceptionKillingTests, final String succeedingTest) {
     this.status = status;
-    this.killingTest = killingTest;
+    this.assertionKillingTests = assertionKillingTests;
+    this.exceptionKillingTests = exceptionKillingTests;
     this.succeedingTest = succeedingTest;
     this.numberOfTestsRun = numberOfTestsRun;
   }
@@ -50,8 +53,12 @@ public final class MutationStatusTestPair implements Serializable {
     return this.status;
   }
 
-  public Optional<String> getKillingTest() {
-    return Optional.ofNullable(this.killingTest);
+  public Optional<String> getAssertionKillingTests() {
+    return Optional.ofNullable(this.assertionKillingTests);
+  }
+  
+  public Optional<String> getExceptionKillingTests() {
+    return Optional.ofNullable(this.exceptionKillingTests);
   }
 
   public Optional<String> getSucceedingTest() {
@@ -64,10 +71,10 @@ public final class MutationStatusTestPair implements Serializable {
 
   @Override
   public String toString() {
-    if (this.killingTest == null) {
+    if (this.assertionKillingTests == null && exceptionKillingTests == null) {
       return this.status.name();
     } else {
-      return this.status.name() + " by " + this.killingTest;
+      return this.status.name() + " by " + this.assertionKillingTests + " or " + this.exceptionKillingTests;
     }
 
   }
@@ -77,7 +84,9 @@ public final class MutationStatusTestPair implements Serializable {
     final int prime = 31;
     int result = 1;
     result = (prime * result)
-        + ((this.killingTest == null) ? 0 : this.killingTest.hashCode());
+        + ((this.assertionKillingTests == null) ? 0 : this.assertionKillingTests.hashCode());
+    result = (prime * result)
+        + ((this.exceptionKillingTests == null) ? 0 : this.exceptionKillingTests.hashCode());
     result = (prime * result) + this.numberOfTestsRun;
     result = (prime * result)
         + ((this.status == null) ? 0 : this.status.hashCode());
@@ -96,11 +105,18 @@ public final class MutationStatusTestPair implements Serializable {
       return false;
     }
     final MutationStatusTestPair other = (MutationStatusTestPair) obj;
-    if (this.killingTest == null) {
-      if (other.killingTest != null) {
+    if (this.assertionKillingTests == null) {
+      if (other.assertionKillingTests != null) {
         return false;
       }
-    } else if (!this.killingTest.equals(other.killingTest)) {
+    } else if (!this.assertionKillingTests.equals(other.assertionKillingTests)) {
+      return false;
+    }
+    if (this.exceptionKillingTests == null) {
+      if (other.exceptionKillingTests != null) {
+        return false;
+      }
+    } else if (!this.exceptionKillingTests.equals(other.exceptionKillingTests)) {
       return false;
     }
     if (this.numberOfTestsRun != other.numberOfTestsRun) {

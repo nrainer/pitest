@@ -91,7 +91,7 @@ public class IncrementalAnalyser implements MutationAnalyser {
     if ((mutationStatusTestPair.getStatus() == DetectionStatus.KILLED)
         && killingTestHasNotChanged(each, mutationStatusTestPair)) {
       return makeResult(each, DetectionStatus.KILLED, mutationStatusTestPair
-          .getKillingTest().get());
+          .getAssertionKillingTests().get());
     }
 
     if ((mutationStatusTestPair.getStatus() == DetectionStatus.SURVIVED)
@@ -109,7 +109,7 @@ public class IncrementalAnalyser implements MutationAnalyser {
         .getClassName());
 
     final List<ClassName> testClasses = allTests.stream()
-        .filter(testIsCalled(mutationStatusTestPair.getKillingTest().get()))
+        .filter(testIsCalled(mutationStatusTestPair.getAssertionKillingTests().get()))
         .map(TestInfo.toDefiningClassName())
         .collect(Collectors.toList());
 

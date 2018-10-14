@@ -17,7 +17,8 @@ package org.pitest.mutationtest.report.xml;
 import static org.pitest.mutationtest.report.xml.Tag.block;
 import static org.pitest.mutationtest.report.xml.Tag.description;
 import static org.pitest.mutationtest.report.xml.Tag.index;
-import static org.pitest.mutationtest.report.xml.Tag.killingTest;
+import static org.pitest.mutationtest.report.xml.Tag.assertionKillingTests;
+import static org.pitest.mutationtest.report.xml.Tag.exceptionKillingTests;
 import static org.pitest.mutationtest.report.xml.Tag.lineNumber;
 import static org.pitest.mutationtest.report.xml.Tag.methodDescription;
 import static org.pitest.mutationtest.report.xml.Tag.mutatedClass;
@@ -25,7 +26,7 @@ import static org.pitest.mutationtest.report.xml.Tag.mutatedMethod;
 import static org.pitest.mutationtest.report.xml.Tag.mutation;
 import static org.pitest.mutationtest.report.xml.Tag.mutator;
 import static org.pitest.mutationtest.report.xml.Tag.sourceFile;
-import static org.pitest.mutationtest.report.xml.Tag.succeedingTest;
+import static org.pitest.mutationtest.report.xml.Tag.succeedingTests;
 
 import java.io.IOException;
 import java.io.Writer;
@@ -40,7 +41,7 @@ import org.pitest.util.StringUtil;
 import org.pitest.util.Unchecked;
 
 enum Tag {
-  mutation, sourceFile, mutatedClass, mutatedMethod, methodDescription, lineNumber, mutator, index, killingTest, succeedingTest, description, block;
+  mutation, sourceFile, mutatedClass, mutatedMethod, methodDescription, lineNumber, mutator, index, assertionKillingTests, exceptionKillingTests, succeedingTests, description, block;
 }
 
 public class XMLReportListener implements MutationResultListener {
@@ -83,10 +84,12 @@ public class XMLReportListener implements MutationResultListener {
         + makeNode(clean(details.getMutator()), mutator)
         + makeNode("" + details.getFirstIndex(), index)
         + makeNode("" + details.getBlock(), block)
-        + makeNode(createTestDesc(mutation.getKillingTest()),
-            killingTest)
+        + makeNode(createTestDesc(mutation.getAssertionKillingTest()),
+            assertionKillingTests)
+        + makeNode(createTestDesc(mutation.getExceptionKillingTest()),
+            exceptionKillingTests)
         + makeNode(createTestDesc(mutation.getSucceedingTest()),
-            succeedingTest)
+            succeedingTests)
         + makeNode(clean(details.getDescription()), description);
   }
 
