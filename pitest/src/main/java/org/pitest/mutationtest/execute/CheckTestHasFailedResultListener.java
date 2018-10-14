@@ -28,13 +28,19 @@ public class CheckTestHasFailedResultListener implements TestListener {
   private static final String TESTCASE_SEPARATOR = "|";
   private Optional<Description> lastFailingTest = Optional.empty();
   private List<Description> succeedingTests = new ArrayList<Description>();
-  private List<Description> failingTests = new ArrayList<Description>();
+  private List<Description> assertionKillingTests = new ArrayList<Description>();
+  private List<Description> exceptionKillingTests = new ArrayList<Description>();
   private int                 testsRun        = 0;
 
   @Override
   public void onTestFailure(final TestResult tr) {
     this.lastFailingTest = Optional.ofNullable(tr.getDescription());
-    this.failingTests.add(tr.getDescription());
+    
+    if (tr.getThrowable() instanceof AssertionError) {
+      this.assertionKillingTests.add(tr.getDescription());
+    } else {
+      this.exceptionKillingTests.add(tr.getDescription());
+    }
   }
 
   @Override
@@ -64,17 +70,25 @@ public class CheckTestHasFailedResultListener implements TestListener {
   public List<Description> succeedingTests() {
     return succeedingTests;
   }
+  
+  public List<Description> assertionFailingTests() {
+    return this.assertionKillingTests;
+  }
 
-  public List<Description> failingTests() {
-    return this.failingTests;
+  public List<Description> exceptionFailingTests() {
+    return this.exceptionKillingTests;
   }
 
   public String succeedingTestsString() {
     return toTestsString(this.succeedingTests());
   }
 
-  public String failingTestsString() {
-    return toTestsString(this.failingTests());
+  public String assertionFailingTestsString() {
+    return toTestsString(this.assertionFailingTests());
+  }
+  
+  public String exceptionFailingTestsString() {
+    return toTestsString(this.exceptionFailingTests());
   }
 
   private String toTestsString(List<Description> descriptions) {

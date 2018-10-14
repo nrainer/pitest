@@ -78,7 +78,7 @@ public class CSVReportListener implements MutationResultListener {
             .getDetails().getClassName().asJavaName(), mutation.getDetails()
             .getMutator(), mutation.getDetails().getMethod(), mutation
             .getDetails().getLineNumber(), mutation.getStatus(),
-            createKillingTestDesc(mutation.getKillingTest()))
+            createKillingTestDesc(mutation.getAssertionKillingTest()))
             + System.getProperty("line.separator"));
       }
 

@@ -59,7 +59,7 @@ public class CheckTestHasFailedResultListenerTest {
     this.testee.onTestFailure(new TestResult(this.description, null));
     java.util.ArrayList<Description> descriptions = new java.util.ArrayList<Description>();
     descriptions.add(this.description);
-    assertEquals(descriptions, this.testee.failingTests());
+    assertEquals(descriptions, this.testee.exceptionFailingTests());
   }
   
   @Test

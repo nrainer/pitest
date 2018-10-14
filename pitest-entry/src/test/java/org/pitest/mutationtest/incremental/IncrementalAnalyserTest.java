@@ -117,7 +117,7 @@ public class IncrementalAnalyserTest {
         .analyse(Collections.singletonList(md)).iterator().next();
 
     assertEquals(DetectionStatus.KILLED, actual.getStatus());
-    assertEquals(Optional.ofNullable(killingTest), actual.getKillingTest());
+    assertEquals(Optional.ofNullable(killingTest), actual.getAssertionKillingTest());
   }
 
   @Test
