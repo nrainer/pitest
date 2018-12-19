@@ -17,6 +17,7 @@ package org.pitest.mutationtest.report.xml;
 import static org.pitest.mutationtest.report.xml.Tag.block;
 import static org.pitest.mutationtest.report.xml.Tag.description;
 import static org.pitest.mutationtest.report.xml.Tag.index;
+import static org.pitest.mutationtest.report.xml.Tag.allScheduledTests;
 import static org.pitest.mutationtest.report.xml.Tag.assertionKillingTests;
 import static org.pitest.mutationtest.report.xml.Tag.exceptionKillingTests;
 import static org.pitest.mutationtest.report.xml.Tag.lineNumber;
@@ -30,18 +31,20 @@ import static org.pitest.mutationtest.report.xml.Tag.succeedingTests;
 
 import java.io.IOException;
 import java.io.Writer;
-
 import java.util.Optional;
+
+import org.pitest.coverage.TestInfo;
 import org.pitest.mutationtest.ClassMutationResults;
 import org.pitest.mutationtest.MutationResult;
 import org.pitest.mutationtest.MutationResultListener;
 import org.pitest.mutationtest.engine.MutationDetails;
+import org.pitest.mutationtest.execute.CheckTestHasFailedResultListener;
 import org.pitest.util.ResultOutputStrategy;
 import org.pitest.util.StringUtil;
 import org.pitest.util.Unchecked;
 
 enum Tag {
-  mutation, sourceFile, mutatedClass, mutatedMethod, methodDescription, lineNumber, mutator, index, assertionKillingTests, exceptionKillingTests, succeedingTests, description, block;
+  mutation, sourceFile, mutatedClass, mutatedMethod, methodDescription, lineNumber, mutator, index, assertionKillingTests, exceptionKillingTests, succeedingTests, allScheduledTests, description, block;
 }
 
 public class XMLReportListener implements MutationResultListener {
@@ -90,7 +93,23 @@ public class XMLReportListener implements MutationResultListener {
             exceptionKillingTests)
         + makeNode(createTestDesc(mutation.getSucceedingTest()),
             succeedingTests)
+        + makeNode(createTestDescForAllScheduledTests(mutation.getDetails()),
+            allScheduledTests)
         + makeNode(clean(details.getDescription()), description);
+  }
+
+  /** All tests in the scheduled order. Interesting for mutations resulting in TIMED_OUT or MEMORY_ERROR. Not all tests may have been running in case of an early abort. */
+  private String createTestDescForAllScheduledTests(MutationDetails mutationDetails) {
+    if (mutationDetails.getTestsInOrder().isEmpty()) {
+      return null;
+    }
+
+    StringBuilder builder = new StringBuilder();
+    for (TestInfo testInfo : mutationDetails.getTestsInOrder()) {
+      builder.append(testInfo.getName());
+      builder.append(CheckTestHasFailedResultListener.TESTCASE_SEPARATOR);
+    }
+    return builder.substring(0, builder.length() - CheckTestHasFailedResultListener.TESTCASE_SEPARATOR.length());
   }
 
   private String clean(final String value) {

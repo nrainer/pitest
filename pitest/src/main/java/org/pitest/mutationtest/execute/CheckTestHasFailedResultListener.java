@@ -25,7 +25,7 @@ import org.pitest.testapi.TestResult;
 
 public class CheckTestHasFailedResultListener implements TestListener {
 
-  private static final String TESTCASE_SEPARATOR = "||";
+  public static final String TESTCASE_SEPARATOR = "||";
   private Optional<Description> lastFailingTest = Optional.empty();
   private List<Description> succeedingTests = new ArrayList<Description>();
   private List<Description> assertionKillingTests = new ArrayList<Description>();
