@@ -63,6 +63,10 @@ public final class MutationResult {
   public MutationStatusTestPair getStatusTestPair() {
     return this.status;
   }
+  
+  public double getDurationInMs() {
+    return this.status.getDurationInMs();
+  }
 
   public String getStatusDescription() {
     return getStatus().name();

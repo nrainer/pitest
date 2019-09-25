@@ -46,8 +46,13 @@ public class MutationStatusMap {
 
   public void setStatusForMutations(
       final Collection<MutationDetails> mutations, final DetectionStatus status) {
+    setStatusForMutations(mutations, status, 0L);
+  }
+
+  public void setStatusForMutations(
+      final Collection<MutationDetails> mutations, final DetectionStatus status, long durationInMs) {
     FCollection.forEach(mutations,
-        putToMap(this.mutationMap, new MutationStatusTestPair(0, status)));
+        putToMap(this.mutationMap, new MutationStatusTestPair(0, status, durationInMs)));
   }
 
   public List<MutationResult> createMutationResults() {

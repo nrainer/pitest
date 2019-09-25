@@ -31,6 +31,8 @@ public class CheckTestHasFailedResultListener implements TestListener {
   private List<Description> assertionKillingTests = new ArrayList<Description>();
   private List<Description> exceptionKillingTests = new ArrayList<Description>();
   private int                 testsRun        = 0;
+  private long testRunStartNano;
+  private long testRunEndNano;
 
   @Override
   public void onTestFailure(final TestResult tr) {
@@ -91,6 +93,15 @@ public class CheckTestHasFailedResultListener implements TestListener {
     return toTestsString(this.exceptionFailingTests());
   }
 
+  public long durationInMs() {
+    if (testRunEndNano == 0) {
+      // unclear if this can happen
+      throw new IllegalStateException("End time has not been set");
+    }
+    
+    return (testRunEndNano - testRunStartNano) / 1000000;
+  }
+  
   private String toTestsString(List<Description> descriptions) {
     if (descriptions.isEmpty()) {
       return null;
@@ -114,12 +125,12 @@ public class CheckTestHasFailedResultListener implements TestListener {
 
   @Override
   public void onRunEnd() {
-
+    this.testRunEndNano = System.nanoTime();
   }
 
   @Override
   public void onRunStart() {
-
+    this.testRunStartNano = System.nanoTime();
   }
 
 }

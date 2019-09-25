@@ -77,6 +77,7 @@ public class MutationTestUnit implements MutationAnalysisUnit {
         .getUnrunMutations();
     final MutationTestProcess worker = this.workerFactory.createWorker(
         remainingMutations, this.testClasses);
+    long nanoStartTime = System.nanoTime();
     worker.start();
 
     setFirstMutationToStatusOfStartedInCaseMinionFailsAtBoot(mutations,
@@ -85,7 +86,7 @@ public class MutationTestUnit implements MutationAnalysisUnit {
     final ExitCode exitCode = waitForMinionToDie(worker);
     worker.results(mutations);
 
-    correctResultForProcessExitCode(mutations, exitCode);
+    correctResultForProcessExitCode(mutations, exitCode, nanoStartTime);
   }
 
   private static ExitCode waitForMinionToDie(final MutationTestProcess worker) {
@@ -102,7 +103,7 @@ public class MutationTestUnit implements MutationAnalysisUnit {
   }
 
   private static void correctResultForProcessExitCode(
-      final MutationStatusMap mutations, final ExitCode exitCode) {
+      final MutationStatusMap mutations, final ExitCode exitCode, long nanoStartTime) {
 
     if (!exitCode.isOk()) {
       final Collection<MutationDetails> unfinishedRuns = mutations
@@ -112,7 +113,8 @@ public class MutationTestUnit implements MutationAnalysisUnit {
       LOG.warning("Minion exited abnormally due to " + status);
       LOG.fine("Setting " + unfinishedRuns.size() + " unfinished runs to "
           + status + " state");
-      mutations.setStatusForMutations(unfinishedRuns, status);
+      long durationInMs = (System.nanoTime() - nanoStartTime) / 1000000;
+      mutations.setStatusForMutations(unfinishedRuns, status, durationInMs);
 
     } else {
       LOG.fine("Minion exited ok");
