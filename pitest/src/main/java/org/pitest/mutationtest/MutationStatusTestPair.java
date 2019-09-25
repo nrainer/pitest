@@ -29,30 +29,42 @@ public final class MutationStatusTestPair implements Serializable {
   /** may be null*/
   private final String  succeedingTest;
 
+  private final long durationInMs;
+
   public MutationStatusTestPair(final int numberOfTestsRun,
       final DetectionStatus status) {
-    this(numberOfTestsRun, status, null, null, null);
+    this(numberOfTestsRun, status, 0, null, null, null);
+  }
+  
+  public MutationStatusTestPair(final int numberOfTestsRun,
+      final DetectionStatus status, long duration) {
+    this(numberOfTestsRun, status, duration, null, null, null);
   }
 
   public MutationStatusTestPair(final int numberOfTestsRun,
       final DetectionStatus status, final String assertionKillingTests) {
     // constructor is not relevant for the mutation matrix
-    this(numberOfTestsRun, status, assertionKillingTests, null, null);
+    this(numberOfTestsRun, status, 0, assertionKillingTests, null, null);
   }
 
   public MutationStatusTestPair(final int numberOfTestsRun,
-      final DetectionStatus status, final String assertionKillingTests, final String exceptionKillingTests, final String succeedingTest) {
+      final DetectionStatus status, final long durationInMs, final String assertionKillingTests, final String exceptionKillingTests, final String succeedingTest) {
     this.status = status;
     this.assertionKillingTests = assertionKillingTests;
     this.exceptionKillingTests = exceptionKillingTests;
     this.succeedingTest = succeedingTest;
     this.numberOfTestsRun = numberOfTestsRun;
+    this.durationInMs = durationInMs;
   }
 
   public DetectionStatus getStatus() {
     return this.status;
   }
 
+  public long getDurationInMs() {
+    return durationInMs;
+  }
+  
   public Optional<String> getAssertionKillingTests() {
     return Optional.ofNullable(this.assertionKillingTests);
   }

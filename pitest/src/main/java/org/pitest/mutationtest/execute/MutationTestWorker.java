@@ -194,10 +194,10 @@ public class MutationTestWorker {
       final CheckTestHasFailedResultListener listener) {
     if (listener.lastFailingTest().isPresent()) {
       return new MutationStatusTestPair(listener.getNumberOfTestsRun(),
-          listener.status(), listener.assertionFailingTestsString(), listener.exceptionFailingTestsString(), listener.succeedingTestsString());
+          listener.status(), listener.durationInMs(), listener.assertionFailingTestsString(), listener.exceptionFailingTestsString(), listener.succeedingTestsString());
     } else {
       return new MutationStatusTestPair(listener.getNumberOfTestsRun(),
-          listener.status(), null, null, listener.succeedingTestsString());
+          listener.status(), listener.durationInMs(), null, null, listener.succeedingTestsString());
     }
   }
 

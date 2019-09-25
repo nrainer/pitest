@@ -57,7 +57,8 @@ public class XMLReportListenerTest {
     this.testee
         .handleMutationResult(MutationTestResultMother.createClassResults(mr));
     final String expected = "<mutation detected='true' status='KILLED' numberOfTestsRun='1'><sourceFile>file</sourceFile><mutatedClass>clazz</mutatedClass><mutatedMethod>method</mutatedMethod><methodDescription>()I</methodDescription><lineNumber>42</lineNumber><mutator>mutator</mutator><index>1</index><block>0</block><assertionKillingTests>foo</assertionKillingTests><exceptionKillingTests/><succeedingTests/><allScheduledTests>foo</allScheduledTests><description>desc</description></mutation>\n";
-    assertEquals(expected, this.out.toString());
+    String actual = this.out.toString().replaceAll("<duration>\\d+.\\d+</duration>", "");
+    assertEquals(expected, actual);
   }
 
   @Test
@@ -83,7 +84,8 @@ public class XMLReportListenerTest {
     this.testee
         .handleMutationResult(MutationTestResultMother.createClassResults(mr));
     final String expected = "<mutation detected='false' status='SURVIVED' numberOfTestsRun='1'><sourceFile>file</sourceFile><mutatedClass>clazz</mutatedClass><mutatedMethod>method</mutatedMethod><methodDescription>()I</methodDescription><lineNumber>42</lineNumber><mutator>mutator</mutator><index>1</index><block>0</block><assertionKillingTests/><exceptionKillingTests/><succeedingTests/><allScheduledTests/><description>desc</description></mutation>\n";
-    assertEquals(expected, this.out.toString());
+    String actual = this.out.toString().replaceAll("<duration>\\d+.\\d+</duration>", "");
+    assertEquals(expected, actual);
   }
 
   private MutationResult createSurvivingMutant() {
